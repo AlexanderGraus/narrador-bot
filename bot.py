@@ -14,7 +14,7 @@ async def on_ready():
     guild = discord.utils.get(client.guilds, name=GUILD)
 
     print(
-        f'{client.user} estas conectador al servidor:\n'
+        f'{client.user} estas conectado al servidor:\n'
         f'{guild.name}(id: {guild.id})'
     )
 
