@@ -9,6 +9,9 @@
 `soucrce {nombre-del-entorno}/bin/activate`
 4) compilar y ejecutar el bot:
 `python bot.py `
+5) crear archivo .env con:
+- DISCORD_TOKEN (token del bot)
+- DISCORD_GUILD (nombre del servidor)
 
 ## instrucciones
 invitar al bot 'narrador' a tu canal de Discord y escrbirle: quiero escribir! él te va a responder y, cual tarotista, te va a ir tirando las cartas para guiarte en la escritura.
