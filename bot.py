@@ -1,46 +1,19 @@
 import os
 import discord
 from dotenv import load_dotenv
+from discord.ext import commands
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
-GUILD = os.getenv('DISCORD_GUILD')
-
-client = discord.Client(intents=discord.Intents.all())
+bot = commands.Bot(command_prefix='!', intents=discord.Intents.all())
 
 
-@client.event
-async def on_ready():
-    guild = discord.utils.get(client.guilds, name=GUILD)
+@bot.command(name='on', help='Comienza el proceso de crear una historia!')
+async def crear_historia(ctx):
+    await ctx.send('me alegro bro! empecemos a escribir \n elige tus opciones: 1,2,3')
 
-    print(
-        f'{client.user} estas conectado al servidor:\n'
-        f'{guild.name}(id: {guild.id})'
-    )
-
-    members = '\n - '.join([member.name for member in guild.members])
-    print(f'miembros:\n - {members}')
-
-
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
-
-    if message.content == 'quiero escribir!':
-        await message.channel.send(
-            "Hola bienvenido al bot para crear historias!"
-        )
-    elif message.content == 'raise-exception':
-        raise discord.DiscordException
-
-
-@client.event
-async def on_error(event, *args, **kwargs):
-    with open('err.log', 'a') as f:
-        if event == 'on_message':
-            f.write(f'Unhandled message: {args[0]}\n')
-        else:
-            raise
-
-client.run(TOKEN)
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.errors.CheckFailure):
+        await ctx.send('You do not have the correct role for this command.')
+bot.run(TOKEN)
