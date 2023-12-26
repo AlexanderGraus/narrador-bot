@@ -37,36 +37,48 @@ def tirar_carta(carta_id=None, mazo_id=None):
     return carta_formatted
 
 
-def escribir_cuento(autor_id, cuento):
-    libros.update({autor_id: {'cuento': cuento}})
+def escribir_libro(autor_id, contador_turnos=0, cuento=''):
+    libros.update(
+        {
+            autor_id:  {
+                'contador_turnos': contador_turnos,
+                'cuento': cuento,
+            }
+        }
+    )
 
 
-def buscar_cuento(autor_id):
-    return libros.get(autor_id, {}).get('cuento', '')
+def buscar_libro(autor_id):
+    return libros.get(autor_id, {})
 
 
 # ----------- Commands -----------------------------
 @bot.command(name='empezar', help='Comienza el proceso de crear una historia!')
 async def crear_historia(ctx):
     await ctx.send(MENSAJE_DE_BIENVENIDA)
-    escribir_cuento(ctx.author.id, '')
+    escribir_libro(ctx.author.id)
     await ctx.send(tirar_carta('1a'))
 
 
 @bot.command(name='escribir', help='Despues de recibir una carta agregale texto a tu cuento!')
 async def escribir(ctx, *, texto):
-    cuento = buscar_cuento(ctx.author.id)
+    cuento = buscar_libro(ctx.author.id).get('cuento', '')
+    contador_turnos = buscar_libro(ctx.author.id).get('contador_turnos', 0)
+
+    contador_turnos += 1
     cuento += texto + '. '
-    escribir_cuento(ctx.author.id, cuento)
+    escribir_libro(ctx.author.id, contador_turnos, cuento)
+
+    await ctx.send(contador_turnos)
     await ctx.send('Nueva carta!\n'+tirar_carta())
 
 
 @bot.command(name='fin', help='Cerra tu historia y mira el cuento terminado!')
 async def cerrar_historia(ctx):
     await ctx.send(
-        f"Muy bien, excelente historia! Así quedó tu cuento: \n`{buscar_cuento(ctx.author.id)}`"
+        f"Muy bien, excelente historia! Así quedó tu cuento: \n`{buscar_libro(ctx.author.id).get('cuento', '')}`"
     )
-    escribir_cuento(ctx.author.id, '')
+    escribir_libro(ctx.author.id)
 
 
 # ------------------ Error Handler -------------------------------
