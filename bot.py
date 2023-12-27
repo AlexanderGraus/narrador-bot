@@ -9,6 +9,7 @@ from utils import CARTAS
 
 MENSAJE_DE_BIENVENIDA = """
     Las cartas de narración son un disparador para construir historias.
+    explicacion de comandos + dinamicas
 """
 
 load_dotenv()
@@ -31,10 +32,11 @@ def tirar_carta(carta_id=None, mazo_id=None):
             mazo = [carta_id for carta_id in CARTAS.keys() if carta_id[0] == mazo_id]
         else:
             mazo = list(CARTAS.keys())
-        carta_id = random.choice(mazo)
-    carta = CARTAS.get(carta_id)
-    carta_formatted = f"{carta_id}: **{carta['titulo']}** \n{carta['descripcion']}"
-    return carta_formatted
+        carta_id = random.choice(mazo) if mazo else None
+    carta = CARTAS.get(carta_id, {})
+    if not carta:
+        return "Esa carta no exite, pa"
+    return f"{carta_id}: **{carta['titulo']}** \n{carta['descripcion']}"
 
 
 def escribir_libro(autor_id, contador_turnos=0, cuento=''):
@@ -60,6 +62,17 @@ async def crear_historia(ctx):
     await ctx.send(tirar_carta('1a'))
 
 
+@bot.command(name='carta', help='Tirar una carta nueva, indicando de cuál mazo queres sacar. En caso de no elegir ninguno saca una al azar de cualquier mazo')
+async def carta(ctx, id=None):
+    if not id:
+        await ctx.send(tirar_carta())
+        return
+    if len(id) > 1:
+        await ctx.send(tirar_carta(carta_id=id))
+    else:
+        await ctx.send(tirar_carta(mazo_id=id))
+
+
 @bot.command(name='escribir', help='Despues de recibir una carta agregale texto a tu cuento!')
 async def escribir(ctx, *, texto):
     cuento = buscar_libro(ctx.author.id).get('cuento', '')
@@ -69,8 +82,7 @@ async def escribir(ctx, *, texto):
     cuento += texto + '. '
     escribir_libro(ctx.author.id, contador_turnos, cuento)
 
-    await ctx.send(contador_turnos)
-    await ctx.send('Nueva carta!\n'+tirar_carta())
+    await ctx.send('Agarra una carta')
 
 
 @bot.command(name='fin', help='Cerra tu historia y mira el cuento terminado!')
