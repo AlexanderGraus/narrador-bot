@@ -84,9 +84,9 @@ async def carta(ctx, id=None):
         if mazo_id > 4:
             raise Exception("Para viejo, yo tengo hasta 4 mazos, si queres mas cartas inventalas")
         turnos = buscar_libro(ctx.author.id).get('contador_turnos', 0)
-        if int(mazo_id) > turnos:
+        if mazo_id > turnos:
             await ctx.send('Ah que picaro que sos eligiendo de otro mazo, muy bien las reglas en la literatura estan PARA ROMPERSE')
-        await ctx.send(tirar_carta(mazo_id=mazo_id))
+        await ctx.send(tirar_carta(mazo_id=str(mazo_id)))
 
 
 @bot.command(name='escribir', help='Despues de recibir una carta agregale texto a tu cuento!')
