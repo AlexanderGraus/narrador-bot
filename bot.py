@@ -35,8 +35,17 @@ def tirar_carta(carta_id=None, mazo_id=None):
         carta_id = random.choice(mazo) if mazo else None
     carta = CARTAS.get(carta_id, {})
     if not carta:
-        return "Esa carta no exite, pa"
+        return "Esa carta no exite, pa, si queres mas cartas... Inventalas"
     return f"{carta_id}: **{carta['titulo']}** \n{carta['descripcion']}"
+
+
+def mazos_disponibles(turnos):
+    mazos = []
+    for i in range(1, turnos+1):
+        mazos.append(i)
+        if i == 4:
+            break
+    return f"Tenes disponibles los mazos {str(mazos)}"
 
 
 def escribir_libro(autor_id, contador_turnos=0, cuento=''):
@@ -68,9 +77,16 @@ async def carta(ctx, id=None):
         await ctx.send(tirar_carta())
         return
     if len(id) > 1:
-        await ctx.send(tirar_carta(carta_id=id))
+        carta_id = id
+        await ctx.send(tirar_carta(carta_id=carta_id))
     else:
-        await ctx.send(tirar_carta(mazo_id=id))
+        mazo_id = int(id)
+        if mazo_id > 4:
+            raise Exception("Para viejo, yo tengo hasta 4 mazos, si queres mas cartas inventalas")
+        turnos = buscar_libro(ctx.author.id).get('contador_turnos', 0)
+        if int(mazo_id) > turnos:
+            await ctx.send('Ah que picaro que sos eligiendo de otro mazo, muy bien las reglas en la literatura estan PARA ROMPERSE')
+        await ctx.send(tirar_carta(mazo_id=mazo_id))
 
 
 @bot.command(name='escribir', help='Despues de recibir una carta agregale texto a tu cuento!')
@@ -82,13 +98,13 @@ async def escribir(ctx, *, texto):
     cuento += texto + '. '
     escribir_libro(ctx.author.id, contador_turnos, cuento)
 
-    await ctx.send('Agarra una carta')
+    await ctx.send(mazos_disponibles(contador_turnos))
 
 
 @bot.command(name='fin', help='Cerra tu historia y mira el cuento terminado!')
 async def cerrar_historia(ctx):
     await ctx.send(
-        f"Muy bien, excelente historia! Así quedó tu cuento: \n`{buscar_libro(ctx.author.id).get('cuento', '')}`"
+        f"Muy bien, excelente historia! Así quedó tu cuento: \n>>>{buscar_libro(ctx.author.id).get('cuento', '')}"
     )
     escribir_libro(ctx.author.id)
 
@@ -101,6 +117,6 @@ async def on_command_error(ctx, error):
     elif isinstance(error, commands.errors.CommandNotFound):
         await ctx.send('Hmm no conozco ese comando, proba con !help para que te tire la lista de ordenes disponibles')
     else:
-        await ctx.send(error.args[0])
+        await ctx.send(error.original)
 
 bot.run(TOKEN)

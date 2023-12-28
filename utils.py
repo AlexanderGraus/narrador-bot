@@ -41,7 +41,7 @@ CARTAS = {
     },
     "3b": {
         'titulo': 'Mientras tanto',
-        'descripcion': '`"Un Personaje Hace", al mismo tiempo, en otro lugar `',
+        'descripcion': '`Un Personaje Hace", al mismo tiempo, en otro lugar `',
     },
     "3c": {
         'titulo': 'Elemento repetido',
