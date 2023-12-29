@@ -1,3 +1,8 @@
+"""
+Discord bot that guide you through the process of creating a story. 
+Its based on the game designed by Fer Catz (fercatz.talleres@gmail.com)
+"""
+
 import os
 import discord
 import random
@@ -8,8 +13,27 @@ from discord.ext import commands
 from utils import CARTAS
 
 MENSAJE_DE_BIENVENIDA = """
-    Las cartas de narración son un disparador para construir historias.
-    explicacion de comandos + dinamicas
+    ¡Hola! bienvenido, vamos a jugar a escribir un cuento, en menos de 5 minutos...
+    Para eso te voy a ir tirando cartas, usalas como disparador y escribí tu texto, así, como surja, no lo pienses mucho.
+
+    Usá el comando `!carta` para pedirme una... carta, obvio. A continuacion indicame de cuál mazo queres que la saque.
+    Si no pones nada te devuelvo una al azar
+    *psss incluso pódes ponerme la carta especifica que queres*
+
+    Tipo de mazos:
+    1) son los recursos basicos de una narracion. podes sacar siempre de acá, no fallan.
+    2) son recursos de inmersion y descripcion de la historia
+    3) recursos que enriquecen el orden y complejidad del argumento
+    4) un condimento fuerte... Usar solo uno por relato... dos como mucho, ojo con abusar! jaj
+
+    **Tip!** para empezar te aconsejo que elijas sacar del mazo (1) que tiene las estructuras básicas.
+
+    Una vez que sientas que la historia ha terminado pone `!fin` y yo te devuelvo lo que escribiste... te vas a sorprender
+
+    AHHH! Me olvidaba. El creador de este juego se llama **Fer Catz**, da talleres de escritura creativa y te ayuda con tu proceso, estés donde estés.
+    Podés escribirle un mail: [fercatz.talleres@gmail.com](https://mailto:fercatz.talleres@gmail.com) (o buscarlo en facebook e instagram, eso que usan ustedes los jóvenes) Para agradecerle o sugerirle mejoras... Yo le sugerí que venga a Discord, pero no me hizo caso :(
+
+    Empecemos!
 """
 
 load_dotenv()
@@ -69,6 +93,7 @@ async def crear_historia(ctx):
     await ctx.send(MENSAJE_DE_BIENVENIDA)
     escribir_libro(ctx.author.id)
     await ctx.send(tirar_carta('1a'))
+    await ctx.send('Ahora poné `!escribir` y a continuacion tu texto para guardar el primer fragmento :)')
 
 
 @bot.command(name='carta', help='Tirar una carta nueva, indicando de cuál mazo queres sacar. En caso de no elegir ninguno saca una al azar de cualquier mazo')
@@ -104,7 +129,7 @@ async def escribir(ctx, *, texto):
 @bot.command(name='fin', help='Cerra tu historia y mira el cuento terminado!')
 async def cerrar_historia(ctx):
     await ctx.send(
-        f"Muy bien, excelente historia! Así quedó tu cuento: \n>>>{buscar_libro(ctx.author.id).get('cuento', '')}"
+        f"Muy bien, excelente historia! Así quedó tu cuento: \n`{buscar_libro(ctx.author.id).get('cuento', '')}`"
     )
     escribir_libro(ctx.author.id)
 
