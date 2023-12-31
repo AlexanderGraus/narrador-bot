@@ -47,6 +47,26 @@ libros = {
 
 
 # ----------- Utils -----------------------------
+def armar_mazos():
+    mazos = {}
+    cartas_repetidas_por_mazo = {'1': 4, '2': 2, '3': 1, '4': 1}
+    for carta_id in CARTAS.keys():
+        mazo_id = carta_id[0]
+        if mazo_id not in mazos:
+            mazos[mazo_id] = []
+        mazos[mazo_id].extend([carta_id]*cartas_repetidas_por_mazo[mazo_id])
+    return mazos
+
+
+def mezclar_mazos():
+    mazos = armar_mazos()
+    mazos_mezclados = {}
+    for mazo in mazos:
+        cartas = mazos[mazo]
+        random.shuffle(cartas)
+        mazos_mezclados[mazo] = cartas
+    return mazos_mezclados
+
 def tirar_carta(carta_id=None, mazo_id=None):
     if not carta_id:
         if mazo_id:
@@ -87,6 +107,7 @@ def buscar_libro(autor_id):
 # ----------- Commands -----------------------------
 @bot.command(name='empezar', help='Comienza el proceso de crear una historia!')
 async def crear_historia(ctx):
+    mezclar_mazos()
     await ctx.send(MENSAJE_DE_BIENVENIDA)
     escribir_libro(ctx.author.id)
     await ctx.send('Empecemos con la __primera carta!__')
