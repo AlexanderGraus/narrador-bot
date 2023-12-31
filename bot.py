@@ -15,7 +15,11 @@ from utils import CARTAS
 MENSAJE_DE_BIENVENIDA = """
     ¡Hola! bienvenido, vamos a jugar a escribir un cuento, en menos de 5 minutos...
     Para eso te voy a ir tirando cartas, usalas como disparador y escribí tu texto, así, como surja, no lo pienses mucho.
-
+    Una vez que sientas que la historia ha terminado pone `!fin` y yo te devuelvo lo que escribiste... te vas a sorprender
+    >>> AHHH! Me olvidaba. El creador de este juego se llama **Fer Catz**, da talleres de escritura creativa y te ayuda con tu proceso, estés donde estés.
+    Podés escribirle un mail: [fercatz.talleres@gmail.com](https://mailto:fercatz.talleres@gmail.com) (o buscarlo en facebook e instagram, eso que usan ustedes los jóvenes) Para agradecerle o sugerirle mejoras... Yo le sugerí que venga a Discord, pero no me hizo caso :(
+"""
+MENSAJE_PRIMERA_CARTA = """
     Usá el comando `!carta` para pedirme una... carta, obvio. A continuacion indicame de cuál mazo queres que la saque.
     Si no pones nada te devuelvo una al azar
     *psss incluso pódes ponerme la carta especifica que queres*
@@ -27,13 +31,6 @@ MENSAJE_DE_BIENVENIDA = """
     4) un condimento fuerte... Usar solo uno por relato... dos como mucho, ojo con abusar! jaj
 
     **Tip!** para empezar te aconsejo que elijas sacar del mazo (1) que tiene las estructuras básicas.
-
-    Una vez que sientas que la historia ha terminado pone `!fin` y yo te devuelvo lo que escribiste... te vas a sorprender
-
-    AHHH! Me olvidaba. El creador de este juego se llama **Fer Catz**, da talleres de escritura creativa y te ayuda con tu proceso, estés donde estés.
-    Podés escribirle un mail: [fercatz.talleres@gmail.com](https://mailto:fercatz.talleres@gmail.com) (o buscarlo en facebook e instagram, eso que usan ustedes los jóvenes) Para agradecerle o sugerirle mejoras... Yo le sugerí que venga a Discord, pero no me hizo caso :(
-
-    Empecemos!
 """
 
 load_dotenv()
@@ -69,7 +66,7 @@ def mazos_disponibles(turnos):
         mazos.append(i)
         if i == 4:
             break
-    return f"Tenes disponibles los mazos {str(mazos)}"
+    return f"Podes sacar una carta de los mazos {str(mazos)}"
 
 
 def escribir_libro(autor_id, contador_turnos=0, cuento=''):
@@ -92,6 +89,7 @@ def buscar_libro(autor_id):
 async def crear_historia(ctx):
     await ctx.send(MENSAJE_DE_BIENVENIDA)
     escribir_libro(ctx.author.id)
+    await ctx.send('Empecemos con la __primera carta!__')
     await ctx.send(tirar_carta('1a'))
     await ctx.send('Ahora poné `!escribir` y a continuacion tu texto para guardar el primer fragmento :)')
 
@@ -122,7 +120,8 @@ async def escribir(ctx, *, texto):
     contador_turnos += 1
     cuento += texto + '. '
     escribir_libro(ctx.author.id, contador_turnos, cuento)
-
+    if contador_turnos == 1:
+        await ctx.send(MENSAJE_PRIMERA_CARTA)
     await ctx.send(mazos_disponibles(contador_turnos))
 
 
