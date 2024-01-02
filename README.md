@@ -13,7 +13,7 @@
 - DISCORD_TOKEN (token del bot)
 
 ## instrucciones
-invitar al bot 'narrador' a tu canal de Discord y escrbirle: !empezar él te va a responder y, cual tarotista, te va a ir tirando las cartas para guiarte en la escritura.
+invitar al bot 'narrador' a tu canal de Discord y escrbirle: `!empezar` él te va a responder y, cual tarotista, te va a ir tirando las cartas para guiarte en la escritura.
 
 ### creditos
 El bot está basado en el juego diseñado por **Fer Catz**, da talleres de escritura creativa y te ayuda con tu proceso literario.
