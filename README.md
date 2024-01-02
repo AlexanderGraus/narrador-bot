@@ -11,9 +11,12 @@
 `python bot.py `
 5) crear archivo .env con:
 - DISCORD_TOKEN (token del bot)
-- DISCORD_GUILD (nombre del servidor)
 
 ## instrucciones
-invitar al bot 'narrador' a tu canal de Discord y escrbirle: quiero escribir! él te va a responder y, cual tarotista, te va a ir tirando las cartas para guiarte en la escritura.
+invitar al bot 'narrador' a tu canal de Discord y escrbirle: !empezar él te va a responder y, cual tarotista, te va a ir tirando las cartas para guiarte en la escritura.
 
+### creditos
+El bot está basado en el juego diseñado por **Fer Catz**, da talleres de escritura creativa y te ayuda con tu proceso literario.
+Podés escribirle un mail: [fercatz.talleres@gmail.com](https://mailto:fercatz.talleres@gmail.com) o buscarlo en facebook e instagram
+  
 Sigamos escribiendo!
